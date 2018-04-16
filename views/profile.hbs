@@ -1,0 +1,64 @@
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{{#if loginDiv}}
+    <h1>Log in to access your profile page</h1>
+{{else}}
+    <div class="box">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <p>{{user.username}}</p>
+            </div>
+            <div class="panel-body">
+                <div class="img_user">
+                    <img src="https://www.jamf.com/jamf-nation/img/default-avatars/generic-user-purple.png">
+                </div>
+                <div class="info_user">
+                    <table class="table table-striped">
+                        <tr class="odd">
+                            <td>Username</td>
+                            <td>{{user.username}}</td>
+                        </tr>
+                        <tr class="even">
+                            <td>Email</td>
+                            <td>{{user.email}}</td>
+                        </tr>
+                        <tr class="odd">
+                            <td>Frist Name</td>
+                            <td>{{user.firstname}}</td>
+                        </tr>
+                        <tr class="even">
+                            <td>Last Name</td>
+                            <td>{{user.lastname}}</td>
+                        </tr>
+                        <tr class="odd">
+                            <td>Date of birth</td>
+                            <td>{{user.birthday}}</td>
+                        </tr>
+                        <tr class="even">
+                            <td>Gender</td>
+                            <td>{{user.gender}}</td>
+                        </tr>
+                        <tr class="odd">
+                            <td>Country</td>
+                            <td>{{user.country}}</td>
+                        </tr>
+                        <tr class="even">
+                            <td>City</td>
+                            <td>{{user.city}}</td>
+                        </tr>
+                        <tr class="odd">
+                            <td>District</td>
+                            <td>{{user.district}}</td>
+                        </tr>
+                        <tr class="even">
+                            <td>Tokens</td>
+                            <td>{{user.credit}}</td>
+                        </tr>
+                    </table>
+                    <button class="btn btn-default">Change Image</button>
+                    <button class="btn btn-default">Edit Information</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{{/if}}
+

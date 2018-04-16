@@ -1,0 +1,96 @@
+<!--
+<definitions name="GameService"
+             targetNamespace="http://localhost:3000/game"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+             -->
+    <definitions name="GameService"
+                 targetNamespace="https://appserver-015.herokuapp.com/game"
+                 xmlns="http://schemas.xmlsoap.org/wsdl/"
+                 xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                 xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <!-- Message Part for the first function. It receives and ID and returns multiple objects regarding
+         the state of the game. -->
+    <message name="InfoPartidaRequest">
+        <part name="id" type="xsd:int"/>
+    </message>
+
+    <message name="InfoPartidaResponse">
+        <part name="inicio" type="xsd:date"/>
+        <part name="jogadorActual" type="xsd:string"/>
+        <part name="cartasNaMesa" type="xsd:string"/>
+        <part name="minhasCartas" type="xsd:string"/>
+        <part name="apostaAtual" type="xsd:int"/>
+        <part name="apostas" type="xsd:string"/>
+    </message>
+
+    <!-- Message Part for the second function. It receives multiple objects that define a player
+         and the current play, returning "Aceite" if the play is valid and was executed,
+         and "Não Aceite" if the play is invalid or if there was an error executing it. -->
+
+    <message name="ApostaJogoRequest">
+        <part name="id" type="xsd:int"/>
+        <part name="user" type="xsd:string"/>
+        <part name="pwd" type="xsd:string"/>
+        <part name="play" type="xsd:string"/>
+        <part name="value" type="xsd:int"/>
+    </message>
+
+    <message name="ApostaJogoResponse">
+        <part name="response" type="xsd:string"/>
+    </message>
+
+    <!-- PortType Part. This is where the operations that contain the messages declared above are defined. -->
+
+    <portType name="PokerCards_PortType">
+        <operation name="InfoPartida">
+            <input message="InfoPartidaRequest"/>
+            <output message="InfoPartidaResponse"/>
+        </operation>
+
+        <operation name="ApostaJogo">
+            <input message="ApostaJogoRequest"/>
+            <output message="ApostaJogoResponse"/>
+        </operation>
+    </portType>
+
+    <!-- Binding Part. This is where the operations are binded to the port to be executed. -->
+
+    <binding name="PokerCards_Binding" type="PokerCards_PortType">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+        <operation name="InfoPartida">
+            <soap:operation soapAction="InfoPartida"/>
+            <input>
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+            </input>
+
+            <output>
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+            </output>
+        </operation>
+
+        <operation name="ApostaJogo">
+            <soap:operation soapAction="ApostaJogo"/>
+            <input>
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+            </input>
+
+            <output>
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+            </output>
+        </operation>
+
+    </binding>
+
+    <!-- Service Part. The main function. -->
+
+    <service name="Game_WebService">
+        <port binding="PokerCards_Binding" name="PokerCards_Port">
+            <!--<soap:address location="http://localhost:3000/game"/> -->
+            <soap:address location="https://appserver-015.herokuapp.com/game"/>
+       </port>
+   </service>
+</definitions>

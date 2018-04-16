@@ -1,0 +1,95 @@
+{{#if session}}
+    <!-- trocar o if depois -->
+    <div>
+        <button id="c" onclick="clearTable()" class="btn btn-default">Clear</button>
+        <div class="option-box">
+
+            <div class="option">
+                <label>Username:</label>
+                <input type="text" id="username" class="form-control" name="username" placeholder="Enter Username">
+                <label>Email:</label>
+                <input type="text" id="email" class="form-control" name="username" placeholder="Enter Username">
+                <br>
+                <button onclick="optionONE()" class="btn btn-default">Search</button>
+            </div>
+
+            <div class="option">
+                <label>First Name:</label>
+                <input type="text" id="firstname" class="form-control" name="username" placeholder="First Name">
+                <label>Last Name:</label>
+                <input type="text" id="lastname" class="form-control" name="username" placeholder="Last Name">
+                <br>
+                <button onclick="optionTWO()" class="btn btn-default">Search</button>
+            </div>
+
+            <div class="option">
+                <label>Game name:</label><br>
+                <input type="text" id="gamename" class="form-control" name="gamename" placeholder="Game Name">
+                <label>Game id:</label><br>
+                <input type="number" id="gameid" name="gameid" min="1" max="1000">
+                <label>Game description:</label><br>
+                <input type="text" id="description" class="form-control" name="description" placeholder="Description">
+                <label>Game creator:</label><br>
+                <input type="text" id="creatorname" class="form-control" name="creatorname" placeholder="Creator Name">
+                <br>
+                <button onclick="optionFIVE()" class="btn btn-default">Search All</button>
+                <button onclick="optionSIX()" class="btn btn-default">Search</button>
+            </div>
+
+            <div class="option">
+                <label>Gender:</label><br>
+                <input type="radio" name="gender" value="M" checked><p> M </p>
+                <input type="radio" name="gender" value="F"><p> F</p>
+                <br>
+                <button onclick="optionTHREE()" class="btn btn-default">Search</button>
+            </div>
+
+            <div class="option">
+                <label>Country:</label>
+                <select id="country" class="form-control" name="country">
+                    <option value="">Country...</option>
+                    {{#each country}}
+                        <option value={{this}}>{{this}}</option>
+                    {{/each}}
+                </select>
+                <label id="cityL">City:</label>
+                <select id="city" class="form-control" name="city" onchange="city_selected()">
+                    <option value="Other" selected>City...</option>
+                </select>
+                <label id="districtL">District:</label>
+                <select id="district" class="form-control" name="district">
+                    <option value="Other" selected>District...</option>
+                </select>
+                <br>
+                <button onclick="optionFOUR()" class="btn btn-default">Search</button>
+            </div>
+        </div>
+        <div class="answer-box">
+            <p id="cenas"></p>
+
+            <table id="tabela" class="table table-striped">
+                <tbody id="tabela-body">
+                    <tr id="1" class="odd"></tr>
+                    <tr id="2" class="even"></tr>
+                    <tr id="3" class="odd"></tr>
+                    <tr id="4" class="even"></tr>
+                    <tr id="5" class="odd"></tr>
+                    <tr id="6" class="even"></tr>
+                    <tr id="7" class="odd"></tr>
+                    <tr id="8" class="even"></tr>
+                    <tr id="9" class="odd"></tr>
+                </tbody>
+            </table>
+
+            <div id="games"></div>
+
+        </div>
+    </div>
+{{else}}
+    <h1>ADMIN Page.</h1>
+    {{#if loginErrPwd}}
+        <br>
+        <br>
+        <p> Admin username or password wrong. Please try again.</p>
+    {{/if}}
+{{/if}}

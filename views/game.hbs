@@ -1,0 +1,308 @@
+{{#if loginDiv}}
+    <h1>Log in to access your profile page</h1>
+{{else}}
+
+    <div>
+        <div class="box1">
+            <div class="panel panel-info">
+                <div id="yo" class="panel-body">
+
+                    <div id="play" class="players"></div>
+
+                    <canvas id="myCanvas"></canvas>
+
+                    <div class="players">
+
+                        <button id='c' class="btn c" onclick="check();">CHECK</button>
+                        <button id='f' class="btn f" onclick="fold();">FOLD</button>
+                        <input type="number" id="raise" class="i" value="1">
+                        <button id='r' class="btn rb" onclick="raise();">Raise</button>
+                        <br>
+                        <p id="pot"></p>
+                        <br>
+                        <p id="cP"></p>
+                        <br>
+                        <p id="cB"></p>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src='/javascripts/games.js'></script>
+    <script src="/javascripts/poker.min.js"></script>
+    <script>
+
+        socket.emit('initGame', {room: '/games/' + {{game.id}} , gameId: {{game.id}}, userId: {{user.id}} });
+
+        socket.on('playerCards', function (ci) {
+            var v1 = ci[1].split(':')[0];
+            var n1 = ci[1].split(':')[1];
+            var v2 = ci[2].split(':')[0];
+            var n2 = ci[2].split(':')[1];
+
+            console.log(ci);
+
+            loadtable(n1, v1, n2, v2);
+        });
+
+
+        //var iogame = io.connect('http://localhost:3000/games/' + {{game.id}});
+        var iogame = io.connect('https://appserver-015.herokuapp.com/games/' + {{game.id}});
+
+        var a;
+        var u = {{user.id}};
+        var canvas = document.getElementById('myCanvas');
+        var context = canvas.getContext('2d');
+
+        iogame.on('initGame', function (serverInfo) {
+            console.log(serverInfo);
+            a = serverInfo;
+
+            createPalyers(a.gamePlayers);
+
+            $('#pot').html("Current Pot: " + a.pot);
+            $('#cP').html("Current Player: " + a.username);
+            $('#cB').html("Current Bet: " + a.currentBet);
+
+            currentPlayer(a.currentPlayer);
+        });
+
+        iogame.on('coverBet', function (serverInfo) {
+            console.log(serverInfo);
+            a = serverInfo;
+
+            $('#pot').html("Current Pot: " + a.pot);
+            $('#cP').html("Current Player: " + a.username);
+            $('#cB').html("Current Bet: " + a.currentBet);
+
+            currentPlayer(a.currentPlayer);
+        });
+
+        iogame.on('foldBet', function (serverInfo) {
+            console.log(serverInfo);
+            a = serverInfo;
+
+            $('#pot').html("Current Pot: " + a.pot);
+            $('#cP').html("Current Player: " + a.username);
+            $('#cB').html("Current Bet: " + a.currentBet);
+
+            currentPlayer(a.currentPlayer);
+        });
+
+        iogame.on('raiseBet', function (serverInfo) {
+            console.log(serverInfo);
+            a = serverInfo;
+
+            $('#pot').html("Current Pot: " + a.pot);
+            $('#cP').html("Current Player: " + a.username);
+            $('#cB').html("Current Bet: " + a.currentBet);
+
+            currentPlayer(a.currentPlayer);
+        });
+
+        iogame.on('flopRound', function (serverInfo) {
+            console.log('cenas que vieram do flop: ', serverInfo);
+            console.log("cards: ", serverInfo.communityCards);
+            a = serverInfo;
+            var ci = a.communityCards;
+            console.log('ci=', ci);
+
+            $('#pot').html("Current Pot: " + a.pot);
+            $('#cP').html("Current Player: " + a.username);
+            $('#cB').html("Current Bet: " + a.currentBet);
+
+            var v1 = ci[0].split(':')[0];
+            var n1 = ci[0].split(':')[1];
+            var v2 = ci[1].split(':')[0];
+            var n2 = ci[1].split(':')[1];
+            var v3 = ci[2].split(':')[0];
+            var n3 = ci[2].split(':')[1];
+
+            tablecards(n1, v1, n2, v2, n3, v3);
+
+            currentPlayer(a.currentPlayer);
+        });
+
+        iogame.on('turnRound', function (serverInfo) {
+            console.log('cenas que vieram do flop: ', serverInfo);
+            console.log("cards: ", serverInfo.communityCards);
+            a = serverInfo;
+            var ci = a.communityCards;
+            console.log('ci=', ci);
+
+            $('#pot').html("Current Pot: " + a.pot);
+            $('#cP').html("Current Player: " + a.username);
+            $('#cB').html("Current Bet: " + a.currentBet);
+
+            var v1 = ci[3].split(':')[0];
+            var n1 = ci[3].split(':')[1];
+
+            cards4(n1, v1);
+
+            currentPlayer(a.currentPlayer);
+        });
+
+        iogame.on('riverRound', function (serverInfo) {
+            console.log('cenas que vieram do flop: ', serverInfo);
+            console.log("cards: ", serverInfo.communityCards);
+            a = serverInfo;
+            var ci = a.communityCards;
+            console.log('ci=', ci);
+
+            $('#pot').html("Current Pot: " + a.pot);
+            $('#cP').html("Current Player: " + a.username);
+            $('#cB').html("Current Bet: " + a.currentBet);
+
+            var v1 = ci[4].split(':')[0];
+            var n1 = ci[4].split(':')[1];
+
+            cards5(n1, v1);
+
+            currentPlayer(a.currentPlayer);
+        });
+
+        iogame.on('shoudownRound', function (serverInfo) {
+            console.log('cenas que vieram do flop: ', serverInfo);
+            console.log("cards: ", serverInfo.communityCards);
+            a = serverInfo;
+
+            $('#pot').html("Current Pot: " + a.pot);
+            $('#cP').html("Current Player: " + a.username);
+            $('#cB').html("Current Bet: " + a.currentBet);
+
+            window.alert("WINNER is  ", a.winner);
+        });
+
+        function createPalyers(p) {
+
+            if ($("#play > div").length == 0) {
+                for (i = 0; i < p.length - 1; i += 3) {
+                    d = document.createElement('div');
+                    $(d).addClass('p1')
+                            .appendTo($("#play"));
+                    $(d).attr('id', p[i + 2]);
+                    $(d).append($("<h2></h2>").text(p[i] + ' : ' + p[i + 1] + ' Cr'));
+                }
+            }
+        }
+
+        function currentPlayer(n) {
+
+            if (u != n) {
+                $('#c').prop('disabled', true);
+                $('#f').prop('disabled', true);
+                $('#r').prop('disabled', true);
+                $("#"+u).toggleClass("currentPlayer");
+            } else {
+                $('#c').prop('disabled', false);
+                $('#f').prop('disabled', false);
+                $('#r').prop('disabled', false);
+                $("#"+u).toggleClass("currentPlayer");
+            }
+
+        }
+
+        function playercards(n1, v1, n2, v2) {
+
+            var h = (canvas.height / 2) + (canvas.height / 6) - (72 / 2);
+            var centro = (canvas.width / 2) - (54 / 2);
+            var w1 = centro + 40;
+            var w2 = centro - 40;
+
+            context.drawPokerCard(w1, h, 72, n1, v1);
+            context.drawPokerCard(w2, h, 72, n2, v2);
+        }
+
+        function foldplayercards() {
+
+            var h = (canvas.height / 2) + (canvas.height / 6) - (72 / 2);
+            var centro = (canvas.width / 2) - (54 / 2);
+            var w1 = centro + 40;
+            var w2 = centro - 40;
+
+            canvas.drawPokerBack(w1, h, 72, '#b55', '#a22');
+            canvas.drawPokerBack(w2, h, 72, '#b55', '#a22');
+        }
+
+        function loadtable(n1, v1, n2, v2) {
+            var canvas = document.getElementById('myCanvas');
+            var context = canvas.getContext('2d');
+            canvas.width = $('#myCanvas').parent().width();
+            canvas.height = window.innerHeight * 0.7;
+
+
+            var img=new Image();
+            //img.src="/images/table_texture.jpg"
+            //img.src="/images/table.png";
+            img.onload = function () {
+                context.drawImage(img, 0, 0, canvas.width, canvas.height);
+                playercards(n1, v1, n2, v2);
+            };
+            img.src = "https://www.vectorgraphit.com/wp-content/uploads/2015/12/26.jpg";
+        }
+
+        function tablecards(n1, v1, n2, v2, n3, v3) {
+            var canvas = document.getElementById('myCanvas');
+            var context = canvas.getContext('2d');
+
+            var h = (canvas.height / 2) - (72 / 2);
+            var h2 = (canvas.height / 3) - (72 / 2);
+            var centro = (canvas.width / 2) - (54 / 2);
+            var w1 = centro;
+            var w2 = centro - (54 / 2) - 50;
+            var w3 = centro - (54 / 2) - 125;
+
+
+            context.drawPokerCard(w1, h2, 72, n1, v1);
+            context.drawPokerCard(w2, h2, 72, n2, v2);
+            context.drawPokerCard(w3, h2, 72, n3, v3);
+        }
+
+        function cards4(n1, v1) {
+            var canvas = document.getElementById('myCanvas');
+            var context = canvas.getContext('2d');
+
+            var h = (canvas.height / 2) - (72 / 2);
+            var h2 = (canvas.height / 3) - (72 / 2);
+            var centro = (canvas.width / 2) - (54 / 2);
+            var w4 = centro + (54 / 2) + 50;
+
+            context.drawPokerCard(w4, h2, 72, n1, v1);
+        }
+
+        function cards5(n1, v1) {
+            var canvas = document.getElementById('myCanvas');
+            var context = canvas.getContext('2d');
+
+            var h = (canvas.height / 2) - (72 / 2);
+            var h2 = (canvas.height / 3) - (72 / 2);
+            var centro = (canvas.width / 2) - (54 / 2);
+            var w5 = centro + (54 / 2) + 125;
+
+            context.drawPokerCard(w5, h2, 72, n1, v1);
+
+        }
+        
+        function check() {
+            console.log("Cliquei checkBet");
+            socket.emit('checkBet', {room: '/games/' + {{game.id}} , gameId: {{game.id}}, userId: {{user.id}} });
+        }
+        
+        function fold() {
+            console.log("Cliquei foldBet");
+            foldplayercards
+            socket.emit('foldBet', {room: '/games/' + {{game.id}} , gameId: {{game.id}}, userId: {{user.id}} });
+        }
+        
+        function raise() {
+            var val = $("#raise").val();
+            console.log("Cliquei raisekBet " + val);
+            socket.emit('raiseBet', {room: '/games/' + {{game.id}} , gameId: {{game.id}}, userId: {{user.id}}, raiseValue: val });
+        }
+
+    </script>
+
+{{/if}}

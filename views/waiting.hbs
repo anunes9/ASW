@@ -1,0 +1,67 @@
+{{#if loginDiv}}
+    <h1>Log in to access your profile page</h1>
+{{else}}
+    <script src='/javascripts/games.js'></script>
+    <script>
+        waiting({{user.id}}, {{game.id}});
+
+        //var iogame = io.connect('http://localhost:3000/games/' + {{game.id}});
+        var iogame = io.connect('https://appserver-015.herokuapp.com/games/' + {{game.id}});
+
+        iogame.on('countPlayers', function (data) {
+            console.log(data);
+            $('#gcount').html(data.nplayers);
+        });
+
+        iogame.on('updateUrl', function () {
+            //document.location.href = 'http://localhost:3000/games/' + {{game.id}};
+            document.location.href = 'https://appserver-015.herokuapp.com/games/' + {{game.id}};
+        });
+    </script>
+
+    <div class="box">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <p>Room: {{game.id}}</p>
+            </div>
+            <div id="yo" class="panel-body">
+                <h2>Waiting for all players</h2>
+                <br>
+                <table class="table table-striped">
+                    <tr class="odd">
+                        <td>Room Name</td>
+                        <td id="gname">{{game.name}}</td>
+                    </tr>
+                    <tr class="even">
+                        <td>Description</td>
+                        <td id="gdescri">{{game.description}}</td>
+                    </tr>
+                    <tr class="odd">
+                        <td>Max Players</td>
+                        <td id="gmaxp">{{game.maxPlayers}}</td>
+                    </tr>
+                    <tr class="even">
+                        <td>Current Players</td>
+                        <td id="gcount">{{game.countPlayers}}</td>
+                    </tr>
+                    <tr class="odd">
+                        <td>Room Creator</td>
+                        <td id="gowner">{{game.ownerName}}</td>
+                    </tr>
+                    <tr class="even">
+                        <td>First Bet</td>
+                        <td id="gfirst">{{game.first_bet}}</td>
+                    </tr>
+
+                    {{#if playerOwner}}
+
+                        <button class="btn btn-default" onclick="gotogame({{game.id}}, {{game.first_bet}})">Start Game</button>
+                        <br>
+                        <br>
+                    {{/if}}
+
+                </table>
+            </div>
+        </div>
+    </div>
+{{/if}}

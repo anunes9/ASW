@@ -1,0 +1,31 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.7.0
+# ignores vulnerabilities until expiry date; change duration by modifying expiry date
+ignore:
+  'npm:sequelize:20150517':
+    - sequelize-heroku > sequelize:
+        reason: Code revision necessary
+        expires: '2017-04-21T11:40:30.718Z'
+  'npm:sequelize:20151019':
+    - sequelize-heroku > sequelize:
+        reason: Code revision necessary v1
+        expires: '2017-04-21T11:40:30.718Z'
+  'npm:sequelize:20160106':
+    - sequelize-heroku > sequelize:
+        reason: Code revision necessary v2
+        expires: '2017-04-21T11:40:30.719Z'
+  'npm:sequelize:20160115':
+    - sequelize-heroku > sequelize:
+        reason: Code revision necessary v3
+        expires: '2017-04-21T11:40:30.719Z'
+  'npm:sequelize:20160329':
+    - sequelize-heroku > sequelize:
+        reason: Code revision necessary v4
+        expires: '2017-04-21T11:40:30.720Z'
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  'npm:qs:20170213':
+    - sqlite3 > node-pre-gyp > request > qs:
+        patched: '2017-03-22T11:30:20.360Z'
+    - sqlite > sqlite3 > node-pre-gyp > request > qs:
+        patched: '2017-03-22T11:30:20.360Z'

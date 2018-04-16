@@ -1,0 +1,67 @@
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<div class="container">
+    <div class="info">
+        <h1>Welcome {{title}}!</h1>
+
+    {{#if loginDiv}}
+        <p>Log in or Sign in to enjoy this experience!</p>
+    {{#if loginErr}}
+        <br>
+        <br>
+        <p> Username or password wrong. Please try again.</p>
+    {{/if}}
+    </div>
+        <div class="cenas">
+            <div class="signin">
+                <div class="letter">
+                    <h2>Sign In</h2>
+                </div>
+                <form action="/register" method="post" id="signin">
+                    <div class="form-group">
+                        <label>Username:</label>
+                        <input id="freeUser" type="text" class="form-control" name="username" placeholder="Enter Username" onchange="checkFreeUser()" required>
+
+                        <label>Email:</label>
+                        <input id="freeEmail" type="email" class="form-control" name="email" placeholder="Enter Email" onchange="checkFreeEmail()" required>
+
+                        <label>Password:</label>
+                        <input id="pwd" type="password" class="form-control" name="pwd" placeholder="Enter Password" required><br>
+                        <input id="pwd1" type="password" class="form-control" name="pwd1" placeholder="Re-Enter Password" onchange="checkpass()" required>
+
+                        <label>Name:</label>
+                        <input type="text" class="form-control" name="firstname" placeholder="Enter First Name" required><br>
+                        <input type="text" class="form-control" name="lastname" placeholder="Enter Last Name" required>
+
+                        <label>Date of birth:</label>
+                        <input type="date" class="form-control" name="birthday" required>
+
+                        <label>Gender:</label>
+                        <input type="radio" name="gender" value="M" checked><p> M </p>
+                        <input type="radio" name="gender" value="F"><p> F</p>
+                        <br>
+                        <label>Country:</label>
+                        <select id="myselect" class="form-control" name="country" onchange="country_selected()" required>
+                            <option value="">Country...</option>
+                            {{#each country}}
+                                <option value={{this}}>{{this}}</option>
+                            {{/each}}
+                        </select>
+                        <label id="3">City:</label>
+                        <select id="4" class="form-control" name="city" onchange="city_selected()">
+                            <option value="Other" selected>City...</option>
+                        </select>
+                        <label id="5">District:</label>
+                        <select id="6" class="form-control" name="district">
+                            <option value="Other" selected>District...</option>
+                        </select><br>
+                    </div>
+                    <button type="submit" class="btn btn-default" name="ola" value="signin">Submit</button>
+                </form>
+            </div>
+        </div>
+    {{else}}
+        <p>User logged in: {{user.username}}</p>
+    {{/if}}
+
+    </div>
+</div>

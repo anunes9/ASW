@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{title}}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <link rel="icon" href="/images/logo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src='/javascripts/admin.js'></script>
+    <script src='/javascripts/handlebars-v4.0.5.js'></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <img alt="Logo" class="img" src="./images/logo.png">
+        <ul class="nav navbar-nav">
+            <li class="nav-item {{#if active.index}}active{{/if}}"><a class="nav-link" href="/">ALL IN!</a></li>
+        </ul>
+
+        {{#if loginDiv}}
+            <ul id="login" class="nav navbar-nav navbar-right">
+                <form class="navbar-form navbar-left" action="/admin/login" method="post">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Admin" name="admin" required>
+                        <input type="password" class="form-control" placeholder="Password" name="pwd" required>
+                    </div>
+                    <button type="submit" class="btn btn-default" name='ola' value="login">Login</button>
+                </form>
+            </ul>
+        {{else}}
+            <ul id="logout" class="nav navbar-nav navbar-right">
+                <div class="navbar-form navbar-left">
+                    <div class="form-group">
+                        <p>{{admin.username}}</p>
+                    </div>
+                    <a href="/admin/logout" ><button class="btn btn-default">Log out</button></a>
+                </div>
+            </ul>
+        {{/if}}
+    </div>
+</nav>
+
+{{{body}}}
+
+</body>
+</html>
